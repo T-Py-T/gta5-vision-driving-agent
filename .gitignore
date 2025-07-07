@@ -1,4 +1,11 @@
-#### joe made this: http://goel.io/joe
+#Ignore in progress items
+**/todo/* 
+
+#IDE Ignore section
+.vscode/
+.cursor/
+.idea/
+.vimrc/
 
 #####=== Python ===#####
 
