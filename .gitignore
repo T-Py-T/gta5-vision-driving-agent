@@ -4,6 +4,7 @@
 #IDE Ignore section
 .vscode/
 .cursor/
+**/tasks/*
 .idea/
 .vimrc/
 
@@ -68,3 +69,13 @@ docs/_build/
 # PyBuilder
 target/
 
+
+# uv
+.venv/
+# uv.lock #this is used to vc the environment
+
+__pycache__/
+*.pyc
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
