@@ -1,5 +1,5 @@
 version = 1
-revision = 2
+revision = 3
 requires-python = ">=3.9, <3.13"
 resolution-markers = [
     "python_full_version >= '3.12' and sys_platform == 'darwin'",
@@ -146,7 +146,7 @@ name = "exceptiongroup"
 version = "1.3.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
-    { name = "typing-extensions", marker = "python_full_version < '3.11'" },
+    { name = "typing-extensions" },
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/0b/9f/a65090624ecf468cdca03533906e7c69ed7588582240cfe7cc9e770b50eb/exceptiongroup-1.3.0.tar.gz", hash = "sha256:b241f5885f560bc56a59ee63ca4c6a8bfa46ae4ad651af316d4e81817bb9fd88", size = 29749, upload-time = "2025-05-10T17:42:51.123Z" }
 wheels = [
@@ -241,6 +241,43 @@ wheels = [
 ]
 
 [[package]]
+name = "gta5-vision-driving-agent"
+version = "0.1.0"
+source = { editable = "." }
+dependencies = [
+    { name = "numpy", version = "2.0.2", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.10'" },
+    { name = "numpy", version = "2.1.3", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.10'" },
+    { name = "opencv-python" },
+    { name = "pandas" },
+    { name = "pynput" },
+    { name = "tensorflow" },
+    { name = "tflearn" },
+]
+
+[package.optional-dependencies]
+dev = [
+    { name = "mypy" },
+    { name = "pre-commit" },
+    { name = "pytest" },
+    { name = "ruff" },
+]
+
+[package.metadata]
+requires-dist = [
+    { name = "mypy", marker = "extra == 'dev'" },
+    { name = "numpy" },
+    { name = "opencv-python" },
+    { name = "pandas" },
+    { name = "pre-commit", marker = "extra == 'dev'" },
+    { name = "pynput" },
+    { name = "pytest", marker = "extra == 'dev'" },
+    { name = "ruff", marker = "extra == 'dev'" },
+    { name = "tensorflow" },
+    { name = "tflearn" },
+]
+provides-extras = ["dev"]
+
+[[package]]
 name = "h5py"
 version = "3.14.0"
 source = { registry = "https://pypi.org/simple" }
@@ -295,7 +332,7 @@ name = "importlib-metadata"
 version = "8.7.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
-    { name = "zipp", marker = "python_full_version < '3.10'" },
+    { name = "zipp" },
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/76/66/650a33bd90f786193e4de4b3ad86ea60b53c89b669a5c7be931fac31cdb0/importlib_metadata-8.7.0.tar.gz", hash = "sha256:d13b81ad223b890aa16c5471f2ac3056cf76c5f10f82d6f9292f0b415f389000", size = 56641, upload-time = "2025-04-27T15:29:01.736Z" }
 wheels = [
@@ -910,43 +947,6 @@ wheels = [
 ]
 
 [[package]]
-name = "pygta5"
-version = "0.1.0"
-source = { editable = "." }
-dependencies = [
-    { name = "numpy", version = "2.0.2", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.10'" },
-    { name = "numpy", version = "2.1.3", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.10'" },
-    { name = "opencv-python" },
-    { name = "pandas" },
-    { name = "pynput" },
-    { name = "tensorflow" },
-    { name = "tflearn" },
-]
-
-[package.optional-dependencies]
-dev = [
-    { name = "mypy" },
-    { name = "pre-commit" },
-    { name = "pytest" },
-    { name = "ruff" },
-]
-
-[package.metadata]
-requires-dist = [
-    { name = "mypy", marker = "extra == 'dev'" },
-    { name = "numpy" },
-    { name = "opencv-python" },
-    { name = "pandas" },
-    { name = "pre-commit", marker = "extra == 'dev'" },
-    { name = "pynput" },
-    { name = "pytest", marker = "extra == 'dev'" },
-    { name = "ruff", marker = "extra == 'dev'" },
-    { name = "tensorflow" },
-    { name = "tflearn" },
-]
-provides-extras = ["dev"]
-
-[[package]]
 name = "pynput"
 version = "1.8.1"
 source = { registry = "https://pypi.org/simple" }
@@ -979,10 +979,10 @@ name = "pyobjc-framework-applicationservices"
 version = "11.1"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
-    { name = "pyobjc-core", marker = "(python_full_version < '3.10' and platform_machine != 'aarch64') or (python_full_version < '3.10' and sys_platform != 'linux') or sys_platform == 'darwin'" },
-    { name = "pyobjc-framework-cocoa", marker = "(python_full_version < '3.10' and platform_machine != 'aarch64') or (python_full_version < '3.10' and sys_platform != 'linux') or sys_platform == 'darwin'" },
-    { name = "pyobjc-framework-coretext", marker = "(python_full_version < '3.10' and platform_machine != 'aarch64') or (python_full_version < '3.10' and sys_platform != 'linux') or sys_platform == 'darwin'" },
-    { name = "pyobjc-framework-quartz", marker = "(python_full_version < '3.10' and platform_machine != 'aarch64') or (python_full_version < '3.10' and sys_platform != 'linux') or sys_platform == 'darwin'" },
+    { name = "pyobjc-core" },
+    { name = "pyobjc-framework-cocoa" },
+    { name = "pyobjc-framework-coretext" },
+    { name = "pyobjc-framework-quartz" },
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/be/3f/b33ce0cecc3a42f6c289dcbf9ff698b0d9e85f5796db2e9cb5dadccffbb9/pyobjc_framework_applicationservices-11.1.tar.gz", hash = "sha256:03fcd8c0c600db98fa8b85eb7b3bc31491701720c795e3f762b54e865138bbaf", size = 224842, upload-time = "2025-06-14T20:56:40.648Z" }
 wheels = [
@@ -997,7 +997,7 @@ name = "pyobjc-framework-cocoa"
 version = "11.1"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
-    { name = "pyobjc-core", marker = "(python_full_version < '3.10' and platform_machine != 'aarch64') or (python_full_version < '3.10' and sys_platform != 'linux') or sys_platform == 'darwin'" },
+    { name = "pyobjc-core" },
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/4b/c5/7a866d24bc026f79239b74d05e2cf3088b03263da66d53d1b4cf5207f5ae/pyobjc_framework_cocoa-11.1.tar.gz", hash = "sha256:87df76b9b73e7ca699a828ff112564b59251bb9bbe72e610e670a4dc9940d038", size = 5565335, upload-time = "2025-06-14T20:56:59.683Z" }
 wheels = [
@@ -1012,9 +1012,9 @@ name = "pyobjc-framework-coretext"
 version = "11.1"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
-    { name = "pyobjc-core", marker = "(python_full_version < '3.10' and platform_machine != 'aarch64') or (python_full_version < '3.10' and sys_platform != 'linux') or sys_platform == 'darwin'" },
-    { name = "pyobjc-framework-cocoa", marker = "(python_full_version < '3.10' and platform_machine != 'aarch64') or (python_full_version < '3.10' and sys_platform != 'linux') or sys_platform == 'darwin'" },
-    { name = "pyobjc-framework-quartz", marker = "(python_full_version < '3.10' and platform_machine != 'aarch64') or (python_full_version < '3.10' and sys_platform != 'linux') or sys_platform == 'darwin'" },
+    { name = "pyobjc-core" },
+    { name = "pyobjc-framework-cocoa" },
+    { name = "pyobjc-framework-quartz" },
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/65/e9/d3231c4f87d07b8525401fd6ad3c56607c9e512c5490f0a7a6abb13acab6/pyobjc_framework_coretext-11.1.tar.gz", hash = "sha256:a29bbd5d85c77f46a8ee81d381b847244c88a3a5a96ac22f509027ceceaffaf6", size = 274702, upload-time = "2025-06-14T20:57:16.059Z" }
 wheels = [
@@ -1029,8 +1029,8 @@ name = "pyobjc-framework-quartz"
 version = "11.1"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
-    { name = "pyobjc-core", marker = "(python_full_version < '3.10' and platform_machine != 'aarch64') or (python_full_version < '3.10' and sys_platform != 'linux') or sys_platform == 'darwin'" },
-    { name = "pyobjc-framework-cocoa", marker = "(python_full_version < '3.10' and platform_machine != 'aarch64') or (python_full_version < '3.10' and sys_platform != 'linux') or sys_platform == 'darwin'" },
+    { name = "pyobjc-core" },
+    { name = "pyobjc-framework-cocoa" },
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/c7/ac/6308fec6c9ffeda9942fef72724f4094c6df4933560f512e63eac37ebd30/pyobjc_framework_quartz-11.1.tar.gz", hash = "sha256:a57f35ccfc22ad48c87c5932818e583777ff7276605fef6afad0ac0741169f75", size = 3953275, upload-time = "2025-06-14T20:58:17.924Z" }
 wheels = [
