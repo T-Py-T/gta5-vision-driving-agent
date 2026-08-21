@@ -1,135 +1,111 @@
-# Computer Vision-Based Game AI Platform
+# GTA V Vision Driving Agent
 
-## Business Challenge Solved
+A computer-vision driving experiment that learns a nine-action policy from GTA
+V screen captures and keyboard demonstrations. The agent observes the game as
+pixels, predicts a driving action, sends keyboard input, and uses frame-to-frame
+motion to detect when the vehicle may be stuck.
 
-**Pain Point:** Traditional game AI development requires extensive manual programming of behavior trees and decision logic, leading to rigid systems that struggle with complex real-time scenarios and require months of development time for each new game environment.
+This is a legacy Windows experiment. Its training data and model weights are
+not included, so running the full loop requires collecting a local dataset and
+configuring a model path.
 
-**Architecture Implemented:** Deep learning computer vision system with Inception v3 CNN architecture, enabling AI agents to learn optimal gameplay strategies through visual input analysis and real-time key press prediction in complex gaming environments.
+## How it works
 
-**Results Achieved:** Developed a scalable computer vision framework that trains AI agents to play Grand Theft Auto 5 with 9 distinct action classes, achieving real-time inference at 60 FPS through screen capture and direct key injection.
-
-## Architecture & Implementation
-
+```text
+Windows screen capture
+        │
+        ▼
+crop, resize, and color conversion
+        │
+        ├──► frame + keyboard label batches
+        │           │
+        │           ▼
+        │      class balancing
+        │           │
+        │           ▼
+        └──────► CNN training
+                    │
+                    ▼
+             nine action scores
+                    │
+                    ▼
+          keyboard control + motion recovery
 ```
-┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
-│   Screen Capture│    │   CNN Model     │    │   Key Injection │
-│   (1920x1080)  │◄──►│   (Inception v3)│◄──►│   (Direct Input)│
-│   RGB Processing│    │   (9 outputs)   │    │   (WASD Keys)   │
-└─────────────────┘    └─────────────────┘    └─────────────────┘
-         │                       │                       │
-         ▼                       ▼                       ▼
-   Real-time screen    Action probability    Direct key press
-   capture at 60 FPS   prediction for 9     injection for game
-   with region focus    driving actions      control simulation
-```
 
-**Key Components:**
-- **Screen Capture System** → Real-time desktop frame capture with region targeting
-- **Inception v3 CNN Architecture** → Advanced image processing for gameplay scene understanding
-- **Multi-Class Classification** → 9 distinct driving actions (W, S, A, D, WA, WD, SA, SD, No Key)
-- **Direct Key Injection** → Low-level Windows API integration for immediate game control
-- **Motion Detection** → Intelligent stuck detection with evasive maneuver triggers
+The action space contains forward, reverse, left, right, the four diagonal
+combinations, and no key. [`src/policy.py`](src/policy.py) contains the shared
+encoding used by the regression tests.
 
-## Technology Choices & Rationale
+## Project layout
 
-| Technology Used | Alternative Considered | Business Justification |
-|-----------------|------------------------|------------------------|
-| **Inception v3 over AlexNet** | Basic CNN architectures | Superior feature extraction for complex gaming scenes with multi-scale processing |
-| **Screen Capture over Game API** | Direct game integration | Universal compatibility across games without requiring source code access |
-| **Direct Key Injection over Virtual Input** | High-level input simulation | Lower latency and more reliable game control with 60 FPS responsiveness |
-| **Multi-Class Classification over Regression** | Continuous output prediction | Discrete action space better suited for driving game mechanics |
-| **Motion Detection over Static Analysis** | Frame-by-frame comparison | Intelligent stuck detection enabling autonomous recovery from obstacles |
+| Path | Purpose |
+| --- | --- |
+| [`src/collect_data.py`](src/collect_data.py) | Capture frames and the currently pressed driving keys |
+| [`src/policy.py`](src/policy.py) | Convert key combinations into the nine-class one-hot label |
+| [`src/training/`](src/training) | Dataset preparation and AlexNet experiments |
+| [`src/models.py`](src/models.py) | TFLearn convolutional model definitions |
+| [`src/train_model.py`](src/train_model.py) | Train a model from local `.npy` frame batches |
+| [`src/test_model.py`](src/test_model.py) | Run model inference and emit keyboard controls |
+| [`src/motion.py`](src/motion.py) | Estimate motion from adjacent frames for recovery behavior |
+| [`tests/test_policy.py`](tests/test_policy.py) | Headless regression tests for action encoding |
 
-**Architecture Decisions:**
-- **Real-time Processing**: 60 FPS screen capture enabling responsive gameplay
-- **Region-Based Capture**: Focused 1920x1080 region extraction reducing computational overhead
-- **Balanced Training Data**: Automated data balancing preventing class imbalance issues
-- **Motion-Aware Recovery**: Intelligent stuck detection with evasive maneuver triggers
+## Setup
 
-## Results Achieved
+Prerequisites for the full experiment:
 
-**Training Performance:**
-- **Data Collection Efficiency**: Automated screen capture system collecting 100K+ training samples
-- **Model Convergence**: Inception v3 architecture achieving stable learning within 30 epochs
-- **Class Balance Optimization**: Automated data balancing preventing bias toward common actions
-- **Real-time Inference**: 60 FPS prediction enabling responsive gameplay control
+- Windows with GTA V running in a consistent window or display layout;
+- Python 3.9–3.12;
+- locally collected training data;
+- a compatible TensorFlow/TFLearn environment; and
+- permission for the process to capture the screen and send keyboard input.
 
-**System Reliability:**
-- **Universal Game Compatibility**: Screen capture approach working across multiple game titles
-- **Robust Error Handling**: Graceful degradation with motion detection for stuck scenarios
-- **Memory Management**: Efficient frame processing preventing memory leaks during extended sessions
-- **Cross-Platform Support**: Windows API integration ensuring stable key injection
-
-**Operational Efficiency:**
-- **Modular Architecture**: Plug-and-play model components enabling rapid experimentation
-- **Configurable Training**: Support for multiple CNN architectures and training parameters
-- **Scalable Data Pipeline**: Automated data collection and preprocessing workflows
-- **Development Velocity**: Reduced new game AI implementation from months to weeks
-
-**Technical Achievements:**
-- **9-Action Driving Policy**: Forward, reverse, left, right, forward-left, forward-right, reverse-left, reverse-right, no-key
-- **Real-time Visual Processing**: 480x270 optimized frame processing for CNN input
-- **Intelligent Recovery System**: Motion detection with automatic evasive maneuvers
-- **Comprehensive Logging**: Training metrics, prediction confidence, and performance tracking
-
-## Key Technical Achievements
-
-- **Inception v3 CNN Architecture**: Implemented Google's advanced CNN enabling superior feature extraction for complex gaming scenes
-- **Real-time Screen Capture**: Optimized frame capture system achieving 60 FPS processing with minimal latency
-- **Direct Key Injection**: Low-level Windows API integration providing immediate and reliable game control
-- **Motion Detection Algorithm**: Intelligent stuck detection with automatic recovery mechanisms
-- **Universal Game Compatibility**: Screen capture approach enabling AI training across multiple game titles
-- **Automated Data Balancing**: Intelligent training data distribution preventing class imbalance issues
-- **Comprehensive Training Pipeline**: End-to-end workflow from data collection to model deployment
-- **Scalable Architecture**: Modular design supporting multiple CNN backbones and training configurations
-
-## Quick Start
-
-### Prerequisites
-- Python 3.7+
-- Windows OS (for direct key injection)
-- Grand Theft Auto 5 (or compatible game)
-- CUDA-compatible GPU (recommended)
-
-### Installation
 ```bash
-pip install -r requirements.txt
+git clone https://github.com/T-Py-T/gta5-vision-driving-agent.git
+cd gta5-vision-driving-agent
+uv sync --extra dev
 ```
 
-### Data Collection
-1. Configure game in windowed mode at 800x600 resolution
-2. Position game window at top-left of screen
-3. Run data collection: `python src/1. collect_data.py`
-4. Collect 100K+ samples for optimal training
+Before training, update the dataset path, `MODEL_NAME`, and `PREV_MODEL` values
+in [`src/train_model.py`](src/train_model.py). Before live inference, set the
+model path and screen dimensions in [`src/test_model.py`](src/test_model.py).
 
-### Model Training
-1. Balance collected data: `python src/training/balance_data.py`
-2. Configure training parameters in `src/2. train_model.py`
-3. Run training: `python src/2. train_model.py`
+The capture and direct-keyboard modules are Windows-specific. Test them in a
+safe game session and keep a manual stop key available before enabling the
+control loop.
 
-### Model Testing
-1. Load trained model in `src/3. test_model.py`
-2. Configure game settings and model path
-3. Run testing: `python src/3. test_model.py`
+## Collect, train, and run
 
-### Model Customization
-- Add custom CNN architectures via `src/models.py`
-- Configure training parameters and data preprocessing
-- Implement new action classes for different game mechanics
+The historical scripts are intentionally separate so each stage can be
+inspected and configured:
 
-### Performance Monitoring
-- Real-time prediction confidence tracking
-- Motion detection and recovery statistics
-- Training metrics and model performance analytics
+```bash
+uv run python src/collect_data.py
+uv run python src/training/balance_data.py
+uv run python src/train_model.py
+uv run python src/test_model.py
+```
 
-## Advanced Features
+Paths and model settings are defined in the scripts rather than through a
+single configuration file. Review them before running a stage; the defaults
+reflect the original development machine.
 
-**Multi-Game Support**: Universal screen capture approach enabling AI training across different games
-**Motion-Aware Recovery**: Intelligent stuck detection with automatic evasive maneuver triggers
-**Real-time Processing**: 60 FPS inference enabling responsive gameplay control
-**Automated Data Pipeline**: End-to-end workflow from collection to deployment
-**Configurable Architecture**: Support for multiple CNN backbones and training configurations
+## Local validation
 
----
+The action contract can be checked without GTA V, TensorFlow, screen capture,
+or model files:
 
-*This project demonstrates advanced computer vision and deep learning techniques for game AI development, providing a robust foundation for creating intelligent gaming agents through visual learning.*
+```bash
+python -m pytest tests/test_policy.py -q
+python -m compileall -q src
+```
+
+These commands validate the dependency-free policy module and Python syntax.
+They do not launch the game or send keyboard input.
+
+## Licensing
+
+Repository-specific additions are available under the [MIT License](LICENSE).
+The project began from the
+[`Sentdex/pygta5`](https://github.com/Sentdex/pygta5) tutorial codebase and also
+contains files with Apache-2.0 and ISC notices. Those original notices and
+terms remain in effect; see [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
