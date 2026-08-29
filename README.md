@@ -1,102 +1,111 @@
 # GTA V Vision Driving Agent
 
-A legacy computer-vision driving-agent study that learns a nine-action policy
-from screen captures and keyboard demonstrations. The repository is useful as
-an inspectable implementation case study: it shows the data path from Windows
-screen capture through convolutional inference to direct keyboard control.
+A computer-vision driving experiment that learns a nine-action policy from GTA
+V screen captures and keyboard demonstrations. The agent observes the game as
+pixels, predicts a driving action, sends keyboard input, and uses frame-to-frame
+motion to detect when the vehicle may be stuck.
 
-> [!NOTE]
-> This is an archived experiment, not a current production package. The source
-> is retained to make the architecture and technical decisions reviewable. No
-> model weights, training dataset, benchmark run, or reproducible gameplay
-> result is published here, so this repository makes no accuracy, frame-rate,
-> convergence, or gameplay-performance claim.
+This is a legacy Windows experiment. Its training data and model weights are
+not included, so running the full loop requires collecting a local dataset and
+configuring a model path.
 
-## What the public repository demonstrates
-
-| Evidence | Where to inspect it | What it proves |
-| --- | --- | --- |
-| Nine-action imitation policy | [`src/policy.py`](src/policy.py) | Deterministic encoding for forward, reverse, steering combinations, and no-key |
-| Windows frame capture | [`src/grabscreen.py`](src/grabscreen.py) | Region-based desktop capture for visual observations |
-| CNN experiments | [`src/models.py`](src/models.py), [`src/training/alexnet.py`](src/training/alexnet.py) | Multiple TFLearn convolutional architectures with a nine-class output |
-| Data collection and balancing | [`src/collect_data.py`](src/collect_data.py), [`src/training/balance_data.py`](src/training/balance_data.py) | Keyboard-labelled frame collection and class-balancing workflow |
-| Closed-loop control | [`src/test_model.py`](src/test_model.py), [`src/motion.py`](src/motion.py) | Prediction-to-key mapping plus motion-based stuck detection |
-| Headless regression check | [`tests/test_policy.py`](tests/test_policy.py) | The action-encoding contract can be verified without GTA V, Windows input, or model files |
-
-## Architecture
+## How it works
 
 ```text
-Windows desktop capture
+Windows screen capture
         │
         ▼
-crop + resize + RGB conversion
+crop, resize, and color conversion
         │
-        ├──────────────► labelled frame batches ──► balancing ──► CNN training
-        │                                                        │
-        └────────────────────────────────────────────────────────▼
-                                                      nine action scores
-                                                               │
-                                                               ▼
-                                                 keyboard control + motion
-                                                      recovery heuristic
+        ├──► frame + keyboard label batches
+        │           │
+        │           ▼
+        │      class balancing
+        │           │
+        │           ▼
+        └──────► CNN training
+                    │
+                    ▼
+             nine action scores
+                    │
+                    ▼
+          keyboard control + motion recovery
 ```
 
-The code explores an imitation-learning loop rather than a game API: the agent
-observes pixels, learns from recorded key presses, and emits one of nine
-discrete driving actions. That boundary makes the approach portable in
-principle, while also making it sensitive to screen geometry, operating-system
-input APIs, and the quality of the demonstration data.
+The action space contains forward, reverse, left, right, the four diagonal
+combinations, and no key. [`src/policy.py`](src/policy.py) contains the shared
+encoding used by the regression tests.
 
-## Evidence boundary
+## Project layout
 
-The repository contains source code and dependency metadata only. It does not
-retain:
+| Path | Purpose |
+| --- | --- |
+| [`src/collect_data.py`](src/collect_data.py) | Capture frames and the currently pressed driving keys |
+| [`src/policy.py`](src/policy.py) | Convert key combinations into the nine-class one-hot label |
+| [`src/training/`](src/training) | Dataset preparation and AlexNet experiments |
+| [`src/models.py`](src/models.py) | TFLearn convolutional model definitions |
+| [`src/train_model.py`](src/train_model.py) | Train a model from local `.npy` frame batches |
+| [`src/test_model.py`](src/test_model.py) | Run model inference and emit keyboard controls |
+| [`src/motion.py`](src/motion.py) | Estimate motion from adjacent frames for recovery behavior |
+| [`tests/test_policy.py`](tests/test_policy.py) | Headless regression tests for action encoding |
 
-- the original demonstration dataset;
-- trained weights or a model card;
-- training curves or evaluation seeds;
-- a captured end-to-end gameplay run; or
-- hardware-normalized latency or frame-rate measurements.
+## Setup
 
-Those omissions mean the code supports an architecture discussion, not a
-quantitative performance claim. Reproducing the full experiment requires a
-Windows host, a licensed GTA V installation, compatible legacy TensorFlow /
-TFLearn dependencies, locally collected demonstrations, and configured model
-paths.
+Prerequisites for the full experiment:
+
+- Windows with GTA V running in a consistent window or display layout;
+- Python 3.9–3.12;
+- locally collected training data;
+- a compatible TensorFlow/TFLearn environment; and
+- permission for the process to capture the screen and send keyboard input.
+
+```bash
+git clone https://github.com/T-Py-T/gta5-vision-driving-agent.git
+cd gta5-vision-driving-agent
+uv sync --extra dev
+```
+
+Before training, update the dataset path, `MODEL_NAME`, and `PREV_MODEL` values
+in [`src/train_model.py`](src/train_model.py). Before live inference, set the
+model path and screen dimensions in [`src/test_model.py`](src/test_model.py).
+
+The capture and direct-keyboard modules are Windows-specific. Test them in a
+safe game session and keep a manual stop key available before enabling the
+control loop.
+
+## Collect, train, and run
+
+The historical scripts are intentionally separate so each stage can be
+inspected and configured:
+
+```bash
+uv run python src/collect_data.py
+uv run python src/training/balance_data.py
+uv run python src/train_model.py
+uv run python src/test_model.py
+```
+
+Paths and model settings are defined in the scripts rather than through a
+single configuration file. Review them before running a stage; the defaults
+reflect the original development machine.
 
 ## Local validation
 
-The policy contract is intentionally dependency-light:
+The action contract can be checked without GTA V, TensorFlow, screen capture,
+or model files:
 
 ```bash
 python -m pytest tests/test_policy.py -q
 python -m compileall -q src
 ```
 
-The Windows capture, training, and live-control scripts are historical and are
-not exercised by the headless test. Their dataset and model paths must be
-configured before use.
+These commands validate the dependency-free policy module and Python syntax.
+They do not launch the game or send keyboard input.
 
-## Repository map
+## Licensing
 
-```text
-src/
-├── collect_data.py          # capture frames and keyboard labels
-├── policy.py                # nine-action encoding contract
-├── train_model.py           # historical training loop
-├── test_model.py            # live inference and direct control loop
-├── models.py                # TFLearn CNN experiments
-├── motion.py                # motion-delta recovery signal
-└── training/                # AlexNet and dataset-preparation utilities
-tests/
-└── test_policy.py           # headless action-contract regression tests
-```
-
-## Provenance and licensing
-
-This project began from the public
-[`Sentdex/pygta5`](https://github.com/Sentdex/pygta5) tutorial lineage and keeps
-third-party notices in source files where present. The upstream repository is
-MIT licensed; individual retained files may carry additional compatible
-notices such as Apache-2.0 or ISC. No new repository-wide license is asserted
-here beyond those existing notices.
+Repository-specific additions are available under the [MIT License](LICENSE).
+The project began from the
+[`Sentdex/pygta5`](https://github.com/Sentdex/pygta5) tutorial codebase and also
+contains files with Apache-2.0 and ISC notices. Those original notices and
+terms remain in effect; see [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
