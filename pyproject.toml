@@ -3,7 +3,7 @@ name = "gta5-vision-driving-agent"
 version = "0.1.0"
 description = "Legacy computer-vision driving-agent study for Grand Theft Auto V"
 readme = "README.md"
-requires-python = ">=3.9,<3.13"
+requires-python = ">=3.11,<3.13"
 dependencies = [
   "numpy",
   "pandas",
@@ -30,10 +30,10 @@ packages = ["src"]
 
 [tool.ruff]
 line-length = 88
-target-version = "py39"
+target-version = "py311"
 
 [tool.mypy]
-python_version = "3.9"
+python_version = "3.11"
 warn_return_any = true
 warn_unused_configs = true
 disallow_untyped_defs = true
