@@ -69,6 +69,10 @@ Before training, update the dataset path, `MODEL_NAME`, and `PREV_MODEL` values
 in [`src/train_model.py`](src/train_model.py). Before live inference, set the
 model path and screen dimensions in [`src/test_model.py`](src/test_model.py).
 
+The complete [Windows workflow](docs/windows-workflow.md) lists the files that
+still contain machine-specific paths, the order of operations, and the safety
+checks to perform before the script can send keyboard input.
+
 The capture and direct-keyboard modules are Windows-specific. Test them in a
 safe game session and keep a manual stop key available before enabling the
 control loop.
@@ -101,6 +105,10 @@ python -m compileall -q src
 
 These commands validate the dependency-free policy module and Python syntax.
 They do not launch the game or send keyboard input.
+
+The repository does not include a trained model, source gameplay recordings, or
+a retained evaluation run. Its durable evidence is the implementation itself
+and the headless action-encoding regression suite.
 
 ## Licensing
 
