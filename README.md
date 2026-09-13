@@ -54,7 +54,7 @@ encoding used by the regression tests.
 Prerequisites for the full experiment:
 
 - Windows with GTA V running in a consistent window or display layout;
-- Python 3.9–3.12;
+- Python 3.11 or 3.12;
 - locally collected training data;
 - a compatible TensorFlow/TFLearn environment; and
 - permission for the process to capture the screen and send keyboard input.
