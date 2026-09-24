@@ -1,5 +1,7 @@
 # GTA V Vision Driving Agent
 
+[![Headless policy checks](https://github.com/T-Py-T/gta5-vision-driving-agent/actions/workflows/test.yml/badge.svg?branch=main)](https://github.com/T-Py-T/gta5-vision-driving-agent/actions/workflows/test.yml?query=branch%3Amain)
+
 A computer-vision driving experiment that learns a nine-action policy from GTA
 V screen captures and keyboard demonstrations. The agent observes the game as
 pixels, predicts a driving action, sends keyboard input, and uses frame-to-frame
@@ -8,6 +10,22 @@ motion to detect when the vehicle may be stuck.
 This is a legacy Windows experiment. Its training data and model weights are
 not included, so running the full loop requires collecting a local dataset and
 configuring a model path.
+
+## Inspectable demo path
+
+There is no hosted driving demo to claim: this repository does not include
+trained weights, gameplay recordings, or a retained evaluation run. The
+reproducible evidence is deliberately smaller and headless:
+
+1. Run the [policy regression suite](tests/test_policy.py) and Python compilation
+   checks without GTA V, TensorFlow, or screen capture.
+2. Follow the [Windows workflow](docs/windows-workflow.md) to collect local
+   demonstrations, train a model, and review the safety checks before enabling
+   keyboard control.
+3. Inspect the [architecture below](#how-it-works) and the linked source files
+   to trace each stage from pixels to action output.
+
+The workflow is an experiment guide, not a claim of driving performance.
 
 ## How it works
 
