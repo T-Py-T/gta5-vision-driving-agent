@@ -30,9 +30,10 @@ The workflow is an experiment guide, not a claim of driving performance.
 For a hiring-oriented review, the smallest verifiable evidence path is the
 [policy contract](src/policy.py), its [headless regression suite](tests/test_policy.py),
 and the [Windows workflow](docs/windows-workflow.md), which records the
-configuration and safety checks required before keyboard control. This shows
-inspectable implementation and bounded validation; it is not live-driving
-evidence.
+configuration and safety checks required before keyboard control. Pair this
+with the [open-problems inventory](docs/OPEN_PROBLEMS.md), which records the
+unresolved evidence boundaries and held decisions. This shows inspectable
+implementation and bounded validation; it is not live-driving evidence.
 
 ## How it works
 
