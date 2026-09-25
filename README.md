@@ -135,3 +135,12 @@ The project began from the
 [`Sentdex/pygta5`](https://github.com/Sentdex/pygta5) tutorial codebase and also
 contains files with Apache-2.0 and ISC notices. Those original notices and
 terms remain in effect; see [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
+
+## Evidence status
+
+> Tip-cite (bank format): T-Py-T/gta5-vision-driving-agent #21 `c48c8eba`
+
+This repository is **NOT READY** for a driving-performance claim. It contains
+no trained weights, gameplay recordings, or retained evaluation run. The
+headless checks validate policy encoding and Python syntax only; they do not
+establish a benchmark score or a `READY` status.
