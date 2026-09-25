@@ -1,6 +1,6 @@
 # Contributing
 
-> Tip-cite (bank format): T-Py-T/gta5-vision-driving-agent #21 `97fe084e`
+> Tip-cite bank: base main `de6ea019` + PR #25. Steward resolves after merge; no `READY` claim.
 
 Thanks for helping improve this legacy Windows vision-driving experiment. Keep
 changes focused, reviewable, and honest about what the repository can support.
