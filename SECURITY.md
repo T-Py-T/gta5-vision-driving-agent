@@ -1,6 +1,6 @@
 # Security policy
 
-> Tip-cite bank: base main `d4e2b800` + PR #24. Steward resolves after merge; no `READY` claim.
+> Tip-cite bank: base main `ec526c26` + PR #28. Steward resolves after merge; no `READY` claim.
 
 ## Supported versions
 
