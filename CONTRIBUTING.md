@@ -1,6 +1,6 @@
 # Contributing
 
-> Tip-cite bank: base main `de6ea019` + PR #25. Steward resolves after merge; no `READY` claim.
+> Tip-cite bank: base main `093465d3` + PR #29. Steward resolves after merge; no `READY` claim; this guide does not establish `READY` status.
 
 Thanks for helping improve this legacy Windows vision-driving experiment. Keep
 changes focused, reviewable, and honest about what the repository can support.
@@ -21,8 +21,9 @@ changes focused, reviewable, and honest about what the repository can support.
 Read the [README evidence status](README.md#evidence-status) before describing
 results. This repository has no retained trained weights, gameplay recordings,
 or evaluation run. Do not claim a benchmark score, driving performance, or
-`READY` status that the retained evidence does not support; do not invent
-scores or evaluation results.
+`READY` status that the retained evidence does not support. A contribution
+guide is not evidence of readiness; do not invent scores or evaluation
+results.
 
 ## Local validation
 
