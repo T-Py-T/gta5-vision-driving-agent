@@ -1,6 +1,6 @@
 # Governance
 
-> Tip-cite bank: base main `332db990` + Ship 145 PR (pending). Steward resolves after merge; no `READY` claim.
+> Tip-cite bank: base main `332db990` + PR #34. Steward resolves after merge; no `READY` claim.
 
 This project is governed through focused, reviewable pull requests from
 `main`. Maintainers review scope, evidence, and safety boundaries; contributors
