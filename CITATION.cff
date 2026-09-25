@@ -1,0 +1,7 @@
+cff-version: 1.2.0
+title: "GTA V Vision Driving Agent"
+version: "0.1.0"
+authors:
+  - name: "T_Py_T"
+    email: "tnt850910@aol.com"
+repository-code: "https://github.com/T-Py-T/gta5-vision-driving-agent"
