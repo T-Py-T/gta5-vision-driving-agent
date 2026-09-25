@@ -138,7 +138,9 @@ terms remain in effect; see [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
 
 ## Evidence status
 
-> Tip-cite (bank format): T-Py-T/gta5-vision-driving-agent #21 `c48c8eba`
+> Tip-cite bank: base main `0d7f54c0` + PR #N. Steward resolves after merge; no `READY` claim.
+
+For the active inventory of unresolved evidence boundaries and held decisions, see [docs/OPEN_PROBLEMS.md](docs/OPEN_PROBLEMS.md).
 
 This repository is **NOT READY** for a driving-performance claim. It contains
 no trained weights, gameplay recordings, or retained evaluation run. The
