@@ -146,7 +146,7 @@ terms remain in effect; see [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
 
 ## Evidence status
 
-> Tip-cite bank: base main `96cec8b9` + PR #33. Steward resolves after merge; no `READY` claim.
+> Tip-cite bank: base main `ea2128d1` + PR #36. Steward resolves after merge; no `READY` claim.
 
 For the active inventory of unresolved evidence boundaries and held decisions, see [docs/OPEN_PROBLEMS.md](docs/OPEN_PROBLEMS.md).
 
