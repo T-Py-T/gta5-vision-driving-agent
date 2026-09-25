@@ -1,5 +1,7 @@
 # Security policy
 
+> Tip-cite bank: base main `d4e2b800` + PR #24. Steward resolves after merge; no `READY` claim.
+
 ## Supported versions
 
 Security fixes apply to the current `main` branch. Older tags and forks are
@@ -32,3 +34,11 @@ a personal machine. Do not commit credentials, game account tokens, private
 capture paths tied to a real identity, or third-party API secrets. Prefer
 synthetic or sanitized fixtures in issues, pull requests, and retained
 artifacts.
+
+## Evidence boundary
+
+This policy makes no `READY` claim and does not declare production readiness. Do not
+infer a score, benchmark, driving-performance result, or live evaluation from
+source inspection, tests, screenshots, or documentation. For the active unresolved
+evidence boundaries and held decisions, see
+[docs/OPEN_PROBLEMS.md](docs/OPEN_PROBLEMS.md).
