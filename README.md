@@ -27,6 +27,13 @@ reproducible evidence is deliberately smaller and headless:
 
 The workflow is an experiment guide, not a claim of driving performance.
 
+For a hiring-oriented review, the smallest verifiable evidence path is the
+[policy contract](src/policy.py), its [headless regression suite](tests/test_policy.py),
+and the [Windows workflow](docs/windows-workflow.md), which records the
+configuration and safety checks required before keyboard control. This shows
+inspectable implementation and bounded validation; it is not live-driving
+evidence.
+
 ## How it works
 
 ```text
@@ -138,7 +145,7 @@ terms remain in effect; see [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
 
 ## Evidence status
 
-> Tip-cite bank: base main `8a83d61d` + PR #31. Steward resolves after merge; no `READY` claim.
+> Tip-cite bank: base main `96cec8b9` + PR #33. Steward resolves after merge; no `READY` claim.
 
 For the active inventory of unresolved evidence boundaries and held decisions, see [docs/OPEN_PROBLEMS.md](docs/OPEN_PROBLEMS.md).
 
