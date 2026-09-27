@@ -148,7 +148,7 @@ terms remain in effect; see [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
 
 > Tip-cite bank: base main `ea2128d1` + PR #36. Steward resolves after merge; no `READY` claim.
 
-For the active inventory of unresolved evidence boundaries and held decisions, see [docs/OPEN_PROBLEMS.md](docs/OPEN_PROBLEMS.md). For a factual record of merged changes on `main`, see [CHANGELOG.md](CHANGELOG.md).
+For the active inventory of unresolved evidence boundaries and held decisions, see [docs/OPEN_PROBLEMS.md](docs/OPEN_PROBLEMS.md). For planned work derived from those boundaries, see [ROADMAP.md](ROADMAP.md). For a factual record of merged changes on `main`, see [CHANGELOG.md](CHANGELOG.md).
 
 This repository is **NOT READY** for a driving-performance claim. It contains
 no trained weights, source gameplay recordings, retained evaluation run, or
