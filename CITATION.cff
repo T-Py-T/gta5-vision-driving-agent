@@ -1,6 +1,12 @@
+# Tip-cite bank: base main 0fad7f8a + this PR pending Steward.
+# Provenance only. Steward resolves after merge; never READY.
 cff-version: 1.2.0
 title: "GTA V Vision Driving Agent"
 version: "0.1.0"
+message: >-
+  Citation metadata for this repository. A tip-cite records provenance only;
+  it does not establish release readiness, driving-performance results,
+  benchmark scores, or a READY status.
 authors:
   - name: "T_Py_T"
     email: "tnt850910@aol.com"
