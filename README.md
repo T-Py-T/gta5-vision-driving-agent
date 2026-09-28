@@ -146,9 +146,13 @@ terms remain in effect; see [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
 
 ## Evidence status
 
-> Tip-cite bank: base main `ea2128d1` + PR #36. Steward resolves after merge; no `READY` claim.
+> Tip-cite bank: base main `003809ae` + this PR pending Steward; provenance only; never
+> `READY`.
 
 For the active inventory of unresolved evidence boundaries and held decisions, see [docs/OPEN_PROBLEMS.md](docs/OPEN_PROBLEMS.md).
+
+For the planning inventory derived from those boundaries — tip-cite provenance only, not
+`READY` — see [ROADMAP.md](ROADMAP.md).
 
 ## Keep exploring
 
