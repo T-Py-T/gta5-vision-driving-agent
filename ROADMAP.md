@@ -1,19 +1,25 @@
 # Roadmap
 
-> Tip-cite bank: base main `ded97f66` + PR #38. Steward resolves after merge; no
-> `READY` claim.
+> Tip-cite bank: base main `003809ae` + this PR pending Steward; provenance only; never
+> `READY`.
 
 **Status:** planning inventory. This page is docs-only. It does not establish
 acceptance, release readiness, driving-performance results, or a `READY`
 claim.
 
+Wayfinder: [T-Py-T/gta5-vision-driving-agent #44](https://github.com/T-Py-T/gta5-vision-driving-agent/issues/44).
+
 ## Baseline on main
 
 This roadmap is written against `main` after
-[T-Py-T/gta5-vision-driving-agent #38](https://github.com/T-Py-T/gta5-vision-driving-agent/pull/38)
-(`ded97f66`), which added [CHANGELOG.md](CHANGELOG.md). Earlier hireability
-documentation ships remain recorded there. Nothing below upgrades that baseline
-to `READY`.
+[T-Py-T/gta5-vision-driving-agent #43](https://github.com/T-Py-T/gta5-vision-driving-agent/pull/43)
+(`003809ae`), which added the [documentation index](docs/README.md). Earlier
+hireability documentation ships remain recorded in [CHANGELOG.md](CHANGELOG.md).
+Nothing below upgrades that baseline to `READY`.
+
+For the README evidence-status boundary and explicit non-claims, see
+[README.md#evidence-status](README.md#evidence-status). That cross-link is
+provenance only; it does not imply `READY`.
 
 ## What is inspectable today
 
