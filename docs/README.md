@@ -1,6 +1,6 @@
 # Documentation index
 
-> Tip-cite bank: base main `caf43a93` + this PR pending Steward; provenance only; never
+> Tip-cite bank: base main `b1c400a2` + this PR pending Steward; provenance only; never
 > `READY`.
 
 **Status:** docs index. This page is a navigation and provenance surface only. It does
@@ -11,6 +11,7 @@ claim.
 
 | Document | Purpose |
 | --- | --- |
+| [HIREABILITY.md](HIREABILITY.md) | Lean hireability and GitHub-topics discoverability surface (no `READY` claim) |
 | [windows-workflow.md](windows-workflow.md) | Staged Windows experiment guide for capture, training, and live control checks |
 | [OPEN_PROBLEMS.md](OPEN_PROBLEMS.md) | Active inventory of unresolved evidence boundaries and held decisions |
 
@@ -36,7 +37,7 @@ These files live outside `docs/` but are part of the same evidence-bounded portf
 
 ## Provenance
 
-> Tip-cite bank: base main `caf43a93` + this PR pending Steward; provenance only; never
+> Tip-cite bank: base main `b1c400a2` + this PR pending Steward; provenance only; never
 > `READY`.
 
 Steward resolves this pointer after merge to the new `main` tip. A tip-cite is not

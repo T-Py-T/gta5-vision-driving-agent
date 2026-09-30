@@ -11,6 +11,10 @@ This is a legacy Windows experiment. Its training data and model weights are
 not included, so running the full loop requires collecting a local dataset and
 configuring a model path.
 
+**Stack:** Python 3.11–3.12, TensorFlow/TFLearn, OpenCV, NumPy — Windows screen
+capture and keyboard I/O. **Discoverability:** hireability summary, suggested GitHub
+topics, and license pointers live in [docs/HIREABILITY.md](docs/HIREABILITY.md).
+
 ## Inspectable demo path
 
 There is no hosted driving demo to claim: this repository does not include
@@ -27,13 +31,8 @@ reproducible evidence is deliberately smaller and headless:
 
 The workflow is an experiment guide, not a claim of driving performance.
 
-For a hiring-oriented review, the smallest verifiable evidence path is the
-[policy contract](src/policy.py), its [headless regression suite](tests/test_policy.py),
-and the [Windows workflow](docs/windows-workflow.md), which records the
-configuration and safety checks required before keyboard control. Pair this
-with the [open-problems inventory](docs/OPEN_PROBLEMS.md), which records the
-unresolved evidence boundaries and held decisions. This shows inspectable
-implementation and bounded validation; it is not live-driving evidence.
+For a hiring-oriented review path (evidence boundaries, no scores or `READY`
+claims), see [docs/HIREABILITY.md](docs/HIREABILITY.md).
 
 ## How it works
 
