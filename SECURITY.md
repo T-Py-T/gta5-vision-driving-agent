@@ -1,6 +1,7 @@
 # Security policy
 
-> Tip-cite bank: base main `f6605e77` + PR #32. Steward resolves after merge; no `READY` claim.
+> Tip-cite bank: base main `9d13043` + this PR pending Steward; provenance only; never
+> `READY`.
 
 ## Supported versions
 
