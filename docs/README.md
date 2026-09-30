@@ -25,6 +25,8 @@ These files live outside `docs/` but are part of the same evidence-bounded portf
 | [../ROADMAP.md](../ROADMAP.md) | Planning inventory derived from README and open-problems boundaries |
 | [../CHANGELOG.md](../CHANGELOG.md) | Factual record of merged changes on `main` |
 | [../CITATION.cff](../CITATION.cff) | Citation metadata and tip-cite provenance |
+| [../CONTRIBUTING.md](../CONTRIBUTING.md) | Contribution workflow, validation pointers, evidence boundaries |
+| [../SECURITY.md](../SECURITY.md) | Vulnerability reporting and repository security boundary |
 
 ## Explicit non-claims
 
