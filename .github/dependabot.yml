@@ -1,0 +1,10 @@
+# tip-cite bank: base main 1d75432e + this PR pending Steward; provenance only; never READY.
+# Config-only: weekly GitHub Actions digest updates. No READY or release claim.
+
+version: 2
+updates:
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 3
