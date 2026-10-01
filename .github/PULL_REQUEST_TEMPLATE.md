@@ -6,7 +6,11 @@ labels: ""
 assignees: ""
 ---
 
-> Tip-cite bank: base main `<8-char-main-tip>` + PR #N. Steward resolves after merge; no `READY` claim.
+> Tip-cite bank: base main `7f179e3f` / PR #48 + this PR pending Steward; provenance only; never
+> `READY`.
+
+Tip-cite protocol: [CHANGELOG — Tip-cite and evidence](../CHANGELOG.md#tip-cite-and-evidence) ·
+[CONTRIBUTING — Pull requests](../CONTRIBUTING.md#pull-requests).
 
 ## Summary
 
@@ -21,4 +25,3 @@ assignees: ""
 
 - [ ] This change does not invent a score, benchmark result, or driving-performance result.
 - [ ] This pull request makes no `READY` claim and does not establish `READY` status.
-- [ ] Before merge, replace the tip-cite placeholders with the actual 8-character `main` tip and PR number.
