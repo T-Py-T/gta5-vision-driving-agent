@@ -35,11 +35,11 @@ production use, or substitutes for retained evaluation artifacts.
 
 ## Merged on main
 
-### Documentation and hireability hygiene
+### Documentation hygiene
 
 - Added `CITATION.cff` citation metadata. T-Py-T/gta5-vision-driving-agent
   #37 `f68fa212`
-- Linked the README hireability evidence path to
+- Linked the README evidence path to
   [docs/OPEN_PROBLEMS.md](docs/OPEN_PROBLEMS.md). T-Py-T/gta5-vision-driving-agent
   #36 `0ebe93ed`
 - Added the pull-request tip-cite template at
@@ -47,7 +47,7 @@ production use, or substitutes for retained evaluation artifacts.
   T-Py-T/gta5-vision-driving-agent #35 `ea2128d1`
 - Added governance boundaries in [GOVERNANCE.md](GOVERNANCE.md).
   T-Py-T/gta5-vision-driving-agent #34 `cdd5e84e`
-- Added the README hireability evidence path and inspectable review cues.
+- Added the README evidence path and inspectable review cues.
   T-Py-T/gta5-vision-driving-agent #33 `332db990`
 - Bound the security policy tip-cite in [SECURITY.md](SECURITY.md).
   T-Py-T/gta5-vision-driving-agent #32 `96cec8b9`

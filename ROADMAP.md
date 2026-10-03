@@ -14,7 +14,7 @@ Wayfinder: [T-Py-T/gta5-vision-driving-agent #44](https://github.com/T-Py-T/gta5
 This roadmap is written against `main` after
 [T-Py-T/gta5-vision-driving-agent #43](https://github.com/T-Py-T/gta5-vision-driving-agent/pull/43)
 (`003809ae`), which added the [documentation index](docs/README.md). Earlier
-hireability documentation ships remain recorded in [CHANGELOG.md](CHANGELOG.md).
+documentation ships remain recorded in [CHANGELOG.md](CHANGELOG.md).
 Nothing below upgrades that baseline to `READY`.
 
 For the README evidence-status boundary and explicit non-claims, see
