@@ -11,7 +11,6 @@ claim.
 
 | Document | Purpose |
 | --- | --- |
-| [HIREABILITY.md](HIREABILITY.md) | Lean hireability and GitHub-topics discoverability surface (no `READY` claim) |
 | [windows-workflow.md](windows-workflow.md) | Staged Windows experiment guide for capture, training, and live control checks |
 | [OPEN_PROBLEMS.md](OPEN_PROBLEMS.md) | Active inventory of unresolved evidence boundaries and held decisions |
 

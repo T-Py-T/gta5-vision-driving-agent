@@ -20,8 +20,7 @@ changes focused, reviewable, and honest about what the repository can support.
 
 ## Evidence and claims
 
-Read [README — Evidence status](README.md#evidence-status) and
-[docs/HIREABILITY.md](docs/HIREABILITY.md) before describing results. Do not
+Read [README — Evidence status](README.md#evidence-status) before describing results. Do not
 claim benchmark scores, driving performance, or `READY` status that the
 retained evidence does not support.
 

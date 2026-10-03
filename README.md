@@ -12,8 +12,7 @@ not included, so running the full loop requires collecting a local dataset and
 configuring a model path.
 
 **Stack:** Python 3.11–3.12, TensorFlow/TFLearn, OpenCV, NumPy — Windows screen
-capture and keyboard I/O. **Discoverability:** hireability summary, suggested GitHub
-topics, and license pointers live in [docs/HIREABILITY.md](docs/HIREABILITY.md).
+capture and keyboard I/O.
 
 ## Inspectable demo path
 
@@ -31,8 +30,6 @@ reproducible evidence is deliberately smaller and headless:
 
 The workflow is an experiment guide, not a claim of driving performance.
 
-For a hiring-oriented review path (evidence boundaries, no scores or `READY`
-claims), see [docs/HIREABILITY.md](docs/HIREABILITY.md).
 
 ## How it works
 
