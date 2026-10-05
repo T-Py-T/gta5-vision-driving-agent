@@ -2,109 +2,78 @@
 
 [![Headless policy checks](https://github.com/T-Py-T/gta5-vision-driving-agent/actions/workflows/test.yml/badge.svg?branch=main)](https://github.com/T-Py-T/gta5-vision-driving-agent/actions/workflows/test.yml?query=branch%3Amain)
 
-**Teach a car to drive in Grand Theft Auto V by watching you play it.**
+**Watch the game. Copy the keys. Drive with nothing but pixels.**
 
-The agent screenshots the game window, feeds the pixels to a convolutional
-network, picks one of nine keyboard actions, and presses the keys. When the
-picture stops changing for long enough, it assumes the car is wedged against
-something and reverses out.
+This is an imitation-learning loop for Grand Theft Auto V that never reads game memory and never calls a mod API. It screenshots the window, learns which of nine keyboard actions you were holding, and later presses those same keys. When the picture stops changing, it assumes the car is stuck and tries to reverse out.
 
-No game API, no memory reading, no mod. It sees the same screen you do and
-presses the same four keys you would.
+You can run the piece that does not need the game in about a minute. The piece that drives needs Windows, your own copy of GTA V, and a dataset you record yourself. No weights ship here, and no drive has been retained.
 
 <a id="evidence-status"></a>
 
-## Status: no driving result is published here
+## No driving result lives in this repository
 
-**There is no published number for how well this drives.** No score, no success
-rate, no distance, no video. This repository has never retained an evaluation
-run, and nothing in the tree should be read as one.
+There is no published score, distance, success rate, or video. The tree has no model weights and no gameplay footage. Training captures are local `.npy` files and are not committed. Nothing in a filename, a comment, or a checkpoint that is not in this tree should be treated as a result, because no evaluation run is retained here.
 
-What is missing, concretely: the training data (local `.npy` captures, never
-committed), the trained weights, any gameplay recording, and any record of a
-measured drive. What is here is the implementation and a small headless test
-suite that checks the action encoding.
+What you can verify today is the action encoding and that the Python sources parse. That is the demo below. It is not a driving benchmark.
 
-If you are looking for a benchmark, this is not that. If you want to see how an
-imitation-learning driving loop was wired together end to end, keep reading.
+## Why try it
+
+Most driving agents hide behind a simulator API. This one is the opposite experiment: the only sensor is a screen rectangle, and the only actuator is W, A, S, and D. The interesting part is the seam between a nine-class convolutional policy and a hand-written recovery behavior that does not trust the network when the car stops moving.
+
+The code is legacy and rough. It is still a complete loop, and the contract that turns keys into labels is small enough to test with no dependencies.
 
 ## Contents
 
-- [How it works](#how-it-works)
+- [How a frame becomes a keypress](#how-a-frame-becomes-a-keypress)
 - [The nine actions](#the-nine-actions)
+- [Worked example](#worked-example)
+- [The demo you can run](#local-validation)
 - [Getting started](#getting-started)
-- [Local validation](#local-validation)
-- [Running the full loop on Windows](#running-the-full-loop-on-windows)
-- [Project layout](#project-layout)
+- [Windows and GTA V](#windows-and-gta-v)
 - [Known rough edges](#known-rough-edges)
 - [Contributing](#contributing)
 - [License](#license)
 
-## How it works
+## How a frame becomes a keypress
 
 ```text
-Windows screen capture
+screen region (0, 40) → (1920, 1120)
         │
         ▼
-crop, resize, and color conversion
+resize to 480×270, BGR → RGB
         │
-        ├──► frame + keyboard label batches
-        │           │
-        │           ▼
-        │      class balancing
-        │           │
-        │           ▼
-        └──────► CNN training
-                    │
-                    ▼
-             nine action scores
-                    │
-                    ▼
-          keyboard control + motion recovery
+        ├── recorded with the keys you were holding
+        │         │
+        │         ▼
+        │    last 50 frames of each batch held out
+        │         │
+        │         ▼
+        └── TFLearn Inception-v3, nine outputs
+                  │
+                  ▼
+        scores × a fixed bias, then argmax
+                  │
+                  ▼
+        PressKey / ReleaseKey, plus stuck recovery
 ```
 
-**Capture.** [`src/collect_data.py`](src/collect_data.py) grabs the desktop
-region `(0, 40)` to `(1920, 1120)` — a 1080p game view below the title bar —
-converts BGR to RGB, and downsizes each frame to 480×270. Every frame is paired
-with whichever of W, A, S, and D you were holding at that instant. Batches of
-500 frame-label pairs are written out as NumPy `.npy` files. `T` pauses and
-resumes.
+**Record.** [`src/collect_data.py`](src/collect_data.py) grabs that 1080p region under the title bar, resizes each frame to 480×270, and stores the frame with a nine-class label. Every 500 pairs it writes a `.npy` batch. `T` pauses.
 
-**Label.** [`src/policy.py`](src/policy.py) turns a set of pressed keys into a
-nine-class one-hot vector. It is deliberately dependency-free so the encoding
-can be tested without TensorFlow, OpenCV, or a game.
+**Label.** [`src/policy.py`](src/policy.py) is dependency-free. Unsupported combinations, including W and S together, become `no-key`, so a label always has exactly one `1`.
 
-**Train.** [`src/train_model.py`](src/train_model.py) loads the `.npy` batches,
-holds out the last 50 frames of each as validation, and fits a TFLearn
-Inception-v3 from [`src/models.py`](src/models.py). That file carries thirteen
-architecture variants accumulated over the project — AlexNet, ResNeXt,
-Inception-v3 in 2D and 3D, an LSTM variant, and several custom "sentnet" nets.
-[`src/xception.py`](src/xception.py) is a separate Keras Xception experiment.
+**Train.** [`src/train_model.py`](src/train_model.py) walks local batches, holds out the last 50 frames of each file, and fits the TFLearn Inception-v3 alias of `inception_v3` in [`src/models.py`](src/models.py). That file still contains thirteen architecture functions (AlexNet, ResNeXt, Inception-v3 in 2D and 3D, an LSTM variant, and several sentnet nets). [`src/xception.py`](src/xception.py) is a separate Keras experiment and is not what the drive script loads.
 
-**Drive.** [`src/test_model.py`](src/test_model.py) runs the same capture loop,
-predicts, and scales the nine raw scores by a hand-tuned bias vector before
-taking the argmax:
+**Drive.** [`src/test_model.py`](src/test_model.py) predicts, then scales the nine scores before the argmax:
 
 ```python
 prediction = np.array(prediction) * np.array([4.5, 0.1, 0.1, 0.1, 1.8, 1.8, 0.5, 0.5, 0.2])
 ```
 
-Forward is boosted 4.5×, the forward diagonals 1.8×, and reverse and the pure
-turns are damped to 0.1 — a hand-tuned correction sitting between the network
-and the keyboard. The winning action becomes a set of `PressKey`/`ReleaseKey`
-calls.
+Forward is multiplied by 4.5, the two forward diagonals by 1.8, and reverse and the pure turns by 0.1. That vector is a hand-tuned correction, not something the network learned.
 
-**Recover.** [`src/motion.py`](src/motion.py) measures how many pixels changed
-between frames using `cv2.absdiff` and a threshold. `test_model.py` keeps a
-rolling window of the last 25 of those counts; when the average drops below
-800, it declares the car stuck and runs one of four randomized escape
-maneuvers — reverse, then turn out — for one to two seconds each.
+**Recover.** [`src/motion.py`](src/motion.py) counts pixels that changed. The drive loop keeps the last 25 counts and, when their average drops below 800, runs a short reverse-and-turn escape. That path is currently broken by a name error described under [Known rough edges](#known-rough-edges).
 
 ## The nine actions
-
-Every prediction collapses to exactly one of these. Unsupported combinations
-(`W`+`S`, or a non-driving key) fall through to `no-key`, so a label always has
-exactly one active class.
 
 | Index | Action | Keys |
 | --- | --- | --- |
@@ -118,185 +87,112 @@ exactly one active class.
 | 7 | `reverse-right` | S + D |
 | 8 | `no-key` | — |
 
-## Getting started
+A model trained against a different order will press the wrong keys. The tests exist to stop that from drifting.
 
-What you need depends on how far you want to go.
+## Worked example
 
-**To read the code and run the tests:** Python 3.11 or 3.12 and nothing else.
-The policy module and its tests have no third-party imports.
+From the repository root, with Python 3.11 or 3.12 and no third-party packages:
 
-**To train or drive:** all of the above, plus a Windows machine, a legally
-obtained copy of GTA V, a display to capture, a TensorFlow/TFLearn environment
-the legacy model code still imports under, and a dataset you record yourself.
-None of those last four ship with this repository and none can be substituted.
-The capture and keyboard modules import `win32gui`, `win32ui`, `win32con`, and
-`win32api`; they will not run on Linux or macOS.
+```python
+from src.policy import ACTION_LABELS, keys_to_output
 
-```bash
-git clone https://github.com/T-Py-T/gta5-vision-driving-agent.git
-cd gta5-vision-driving-agent
+ACTION_LABELS
+# ('forward', 'reverse', 'left', 'right', 'forward-left',
+#  'forward-right', 'reverse-left', 'reverse-right', 'no-key')
+
+keys_to_output(["W", "D"])   # accelerate through a right turn
+# [0, 0, 0, 0, 0, 1, 0, 0, 0]
+
+keys_to_output(["W", "S"])   # gas and brake together is not a class
+# [0, 0, 0, 0, 0, 0, 0, 0, 1]
 ```
 
-The full dependency set — TensorFlow, TFLearn, OpenCV, NumPy, pandas, pynput —
-installs with [uv](https://docs.astral.sh/uv/):
-
-```bash
-uv sync --extra dev
-```
-
-Expect friction here. TFLearn is unmaintained and its compatibility with modern
-TensorFlow varies by Python version. Once a combination imports successfully,
-keep the lockfile.
+That vector is the training target for a frame, and it is the order `test_model.py` reads back out of the network.
 
 <a id="local-validation"></a>
 
-## Local validation
+## The demo you can run
 
-You can verify the part of this project that does not need a game. From a fresh
-clone, with no dependencies installed:
+This is the headless path. It does not launch GTA V, import TensorFlow, capture the screen, or send a key.
 
 ```bash
 python -m pytest tests/test_policy.py -q
 python -m compileall -q src
 ```
 
-The first command checks the action encoding; the second checks that every
-source file parses. This is exactly what
-[CI](.github/workflows/test.yml) runs on every pull request, and on a clean
-checkout it looks like this:
+Use Python 3.11 or 3.12. [`pyproject.toml`](pyproject.toml) requires `>=3.11,<3.13`. [CI](.github/workflows/test.yml) installs `pytest==8.4.2` on Python 3.11 and runs those two commands on pull requests. A clean run looks like this:
 
-```console
-$ python -m pytest tests/test_policy.py -q
+```text
 ..                                                                       [100%]
 2 passed in 0.01s
 ```
 
-Neither command launches GTA V, imports TensorFlow, captures the screen, or
-sends a keystroke.
+`compileall` prints nothing when every file under `src/` parses.
 
-### A real example
+There is no screenshot in this repository, so there is nothing to show for a drive. If you want to see the car move, that only happens on the Windows path below, and only after you record data and train a model that this tree does not contain.
 
-The label encoder is the one piece you can exercise directly. Start `python`
-from the repository root:
+## Getting started
 
-```python
->>> from src.policy import ACTION_LABELS, keys_to_output
->>> ACTION_LABELS
-('forward', 'reverse', 'left', 'right', 'forward-left', 'forward-right', 'reverse-left', 'reverse-right', 'no-key')
->>> keys_to_output(["W", "D"])        # accelerating into a right turn
-[0, 0, 0, 0, 0, 1, 0, 0, 0]
->>> keys_to_output(["W", "S"])        # gas and brake together -> no-key
-[0, 0, 0, 0, 0, 0, 0, 0, 1]
+```bash
+git clone https://github.com/T-Py-T/gta5-vision-driving-agent.git
+cd gta5-vision-driving-agent
+python -m pytest tests/test_policy.py -q
 ```
 
-That one-hot vector is the training target for a frame, and the same ordering
-is what `test_model.py` reads back out of the network. A model trained against
-a different label order will send the wrong controls.
+The policy module imports nothing outside the standard library. The rest of the project declares TensorFlow, TFLearn, OpenCV, NumPy, pandas, and pynput:
 
-## Running the full loop on Windows
+```bash
+uv sync --extra dev
+```
 
-Each stage is a separate script, run in order. Paths and model names live
-inside the scripts rather than in a config file, so read each one before you run
-it.
+That install was not executed while writing this page. TFLearn is unmaintained, and whether it imports on a current TensorFlow wheel depends on the Python version you pin. Treat a successful import as something you have to confirm locally, then keep the lockfile.
+
+## Windows and GTA V
+
+**Not run from this checkout.** Capture and keyboard control import `win32gui`, `win32ui`, `win32con`, and `win32api`. They will not start on macOS or Linux. You also need a legally obtained copy of GTA V and a display. This repository ships neither.
+
+The scripts are separate, and the paths and model names are constants inside them. Read each file before you run it.
 
 ```powershell
-uv run python src/collect_data.py          # record demonstrations
-uv run python src/training/balance_data.py # even out the class distribution
-uv run python src/train_model.py           # fit a model on your .npy batches
-uv run python src/test_model.py            # let it drive
+uv run python src/collect_data.py
+uv run python src/training/balance_data.py
+uv run python src/train_model.py
+uv run python src/test_model.py
 ```
 
-Before the first run, set the capture region in `collect_data.py` and the
-`GAME_WIDTH`, `GAME_HEIGHT`, and region values in `test_model.py` to match your
-monitor and window layout. Before training, set the dataset path, `MODEL_NAME`,
-and `PREV_MODEL` in `train_model.py`. Before driving, point `MODEL_NAME` in
-`test_model.py` at a checkpoint.
+Before recording, match the capture region to your window. Before training, set `MODEL_NAME`, `PREV_MODEL`, and the dataset directory in `train_model.py`. Before driving, set `MODEL_NAME` in `test_model.py` to a checkpoint you produced. Both names are currently empty strings, and `train_model.py` still has `LOAD_MODEL = True`, so it tries to load that empty name immediately.
 
-A safety note that is not boilerplate: `test_model.py` emits virtual key events
-to whatever window has focus. If GTA V loses focus mid-run, your agent starts
-typing W, A, S, and D into something else. Start in a windowed session, park the
-car somewhere harmless, confirm the `T` pause key registers, and keep the
-terminal in reach to kill the process.
+`test_model.py` sends virtual key events to whatever window is focused. If GTA V loses focus, the agent types into something else. Use a windowed session, start somewhere harmless, confirm `T` pauses, and keep a way to kill the process.
 
-[`docs/windows-workflow.md`](docs/windows-workflow.md) walks the same path in
-more detail, including which files still hold machine-specific values.
-
-## Project layout
-
-| Path | Purpose |
-| --- | --- |
-| [`src/collect_data.py`](src/collect_data.py) | Capture frames and the currently pressed driving keys |
-| [`src/policy.py`](src/policy.py) | Convert key combinations into the nine-class one-hot label |
-| [`src/grabscreen.py`](src/grabscreen.py) | Windows desktop region capture |
-| [`src/getkeys.py`](src/getkeys.py) | Poll which keys are held |
-| [`src/directkeys.py`](src/directkeys.py), [`src/keys.py`](src/keys.py) | Send virtual key events to the game |
-| [`src/models.py`](src/models.py) | Thirteen TFLearn convolutional architectures |
-| [`src/xception.py`](src/xception.py) | Separate Keras Xception experiment |
-| [`src/train_model.py`](src/train_model.py) | Train from local `.npy` frame batches |
-| [`src/test_model.py`](src/test_model.py) | Run inference and emit keyboard controls |
-| [`src/motion.py`](src/motion.py) | Frame-difference motion estimate used for stuck detection |
-| [`src/weighting_class_distributor.py`](src/weighting_class_distributor.py) | Sweep per-class output weights against a local validation set (inputs not in repo) |
-| [`src/training/`](src/training) | Earlier three-class data prep and AlexNet experiments |
-| [`tests/test_policy.py`](tests/test_policy.py) | Headless regression tests for action encoding |
+More of the same path is in [`docs/windows-workflow.md`](docs/windows-workflow.md).
 
 ## Known rough edges
 
-This is a legacy codebase preserved as it was, not a maintained package. Known
-issues, so you do not have to find them yourself:
+Left as they are, on purpose. They are documented so the next person does not have to rediscover them.
 
-- **Hard-coded drive letters.** `collect_data.py` rolls batches onto
-  `X:/pygta5/phase7-larger-color/`, and `train_model.py` reads from
-  `J:/phase10-random-padded/`. Both are from the original development machine.
-- **Empty model names.** `MODEL_NAME` and `PREV_MODEL` are `''` in
-  `train_model.py` and `test_model.py`. They must be filled in before either
-  script will load or save anything.
-- **A live NameError in the drive loop.** `test_model.py` assigns
-  `delta_count_last` but later appends `delta_count`, which is never defined.
-  The stuck-detection path will raise until that is reconciled.
-- **Two generations of code in one tree.** `src/training/create_training_data.py`
-  (160×120 grayscale) and `src/training/balance_data.py` both still encode the
-  earlier three-class left / forward / right label set. Neither matches the
-  nine-class 480×270 pipeline, so the balancing step needs adapting before use.
-- **Undeclared imports.** `train_model.py` imports `tqdm`, which is not in
-  `pyproject.toml`. `otherception3` in `models.py` calls `tf.device` without
-  importing TensorFlow.
+- **Hard-coded drives.** The first 500-frame batch in `collect_data.py` is written to a relative `training_data-N.npy` in the working directory. Every batch after that goes to `X:/pygta5/phase7-larger-color/`. `train_model.py` reads `J:/phase10-random-padded/training_data-{i}.npy` for `i` in `1..1860` (`FILE_I_END`). Those letters are from the original machine.
+- **Empty model names.** `MODEL_NAME` and `PREV_MODEL` are `''` in both `train_model.py` and `test_model.py`.
+- **NameError on the stuck-car path.** `test_model.py` assigns `delta_count_last`, then appends `delta_count`, which is never defined. Recovery raises `NameError` until those names are reconciled. Product code is intentionally not changed here.
+- **Three-class leftovers.** [`src/training/create_training_data.py`](src/training/create_training_data.py) still captures an 800×600 region, converts to grayscale, resizes to 160×120, and emits a three-class `[A, W, D]` vector. [`src/training/balance_data.py`](src/training/balance_data.py) still balances left / forward / right. Neither matches the nine-class 480×270 pipeline.
+- **Imports the project file does not cover.** `train_model.py` imports `tqdm`, which is not listed in `pyproject.toml`. `otherception3` in `models.py` calls `tf.device` without importing TensorFlow.
 
 ## Contributing
 
-Issues and pull requests are welcome, especially ones that keep this runnable
-for the next person who finds it. [`CONTRIBUTING.md`](CONTRIBUTING.md) has the
-workflow; the short version:
+Issues and pull requests are welcome. Branch from `main`, keep one concern per pull request, and run the two headless commands before opening it. Do not commit datasets, weights, or screen recordings. Do not add a driving score unless the run that produced it is committed with it.
 
-- One concern per pull request, branched from `main`.
-- Run `python -m pytest tests/test_policy.py -q` and `python -m compileall -q src`
-  before you open it.
-- Never commit datasets, model weights, or gameplay captures. Screen recordings
-  of a desktop can contain more than the game.
-- Do not add a driving score, success rate, or benchmark to the docs unless the
-  run that produced it is committed alongside it.
-
-See also [`CODE_OF_CONDUCT.md`](CODE_OF_CONDUCT.md),
-[`SECURITY.md`](SECURITY.md), and [`SUPPORT.md`](SUPPORT.md).
+Details are in [`CONTRIBUTING.md`](CONTRIBUTING.md). Also see [`CODE_OF_CONDUCT.md`](CODE_OF_CONDUCT.md), [`SECURITY.md`](SECURITY.md), and [`SUPPORT.md`](SUPPORT.md).
 
 ## License
 
-Repository-specific additions are under the [MIT License](LICENSE).
+Repository-specific additions are [MIT](LICENSE).
 
-This project began from the [`Sentdex/pygta5`](https://github.com/Sentdex/pygta5)
-tutorial codebase and retains files under other terms: `src/models.py` carries
-Google's Apache-2.0 notice, and `src/motion.py` carries Noah Spurrier's
-ISC-style notice. Those terms remain in effect — the MIT license does not
-relicense them. See [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
+This project started from the [`Sentdex/pygta5`](https://github.com/Sentdex/pygta5) tutorial code. `src/models.py` keeps Google's Apache-2.0 notice, and `src/motion.py` keeps Noah Spurrier's ISC-style notice. The MIT license does not relicense those files. See [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
 
-This project is not affiliated with or endorsed by Rockstar Games, and it ships
-no game assets. You need your own copy of GTA V.
+Not affiliated with or endorsed by Rockstar Games. No game assets are included. You need your own copy of GTA V.
 
-## More documentation
-
-| Document | What it covers |
+| Also in the tree | |
 | --- | --- |
-| [docs/windows-workflow.md](docs/windows-workflow.md) | Stage-by-stage Windows experiment guide |
-| [docs/OPEN_PROBLEMS.md](docs/OPEN_PROBLEMS.md) | What is unresolved and why no result is published |
+| [docs/windows-workflow.md](docs/windows-workflow.md) | Windows experiment notes |
+| [docs/OPEN_PROBLEMS.md](docs/OPEN_PROBLEMS.md) | Why no result is published |
 | [ROADMAP.md](ROADMAP.md) | Planned work |
-| [CHANGELOG.md](CHANGELOG.md) | Record of merged changes on `main` |
-| [CITATION.cff](CITATION.cff) | Citation metadata |
+| [CHANGELOG.md](CHANGELOG.md) | Merged changes on `main` |
