@@ -1,8 +1,5 @@
 # Security policy
 
-> Tip-cite bank: base main `9d13043` + this PR pending Steward; provenance only; never
-> `READY`.
-
 ## Supported versions
 
 Security fixes apply to the current `main` branch. Older tags and forks are
@@ -38,8 +35,7 @@ artifacts.
 
 ## Evidence boundary
 
-This policy makes no `READY` claim and does not declare production readiness. Do not
-infer a score, benchmark, driving-performance result, or live evaluation from
+Do not infer a score, benchmark, driving-performance result, or live evaluation from
 source inspection, tests, screenshots, or documentation. For the active unresolved
 evidence boundaries and held decisions, see
 [docs/OPEN_PROBLEMS.md](docs/OPEN_PROBLEMS.md).
