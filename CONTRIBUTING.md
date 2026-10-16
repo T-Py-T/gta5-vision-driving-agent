@@ -1,8 +1,5 @@
 # Contributing
 
-> Tip-cite bank: base main `9d13043` + this PR pending Steward; provenance only; never
-> `READY`.
-
 Thanks for helping improve this legacy Windows vision-driving experiment. Keep
 changes focused, reviewable, and honest about what the repository can support.
 
@@ -20,9 +17,8 @@ changes focused, reviewable, and honest about what the repository can support.
 
 ## Evidence and claims
 
-Read [README — Evidence status](README.md#evidence-status) before describing results. Do not
-claim benchmark scores, driving performance, or `READY` status that the
-retained evidence does not support.
+Read [README — Status](README.md#evidence-status) before describing results. Only
+report benchmark scores or driving performance that a committed run supports.
 
 ## Local validation
 

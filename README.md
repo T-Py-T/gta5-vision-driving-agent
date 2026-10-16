@@ -6,15 +6,7 @@
 
 This is an imitation-learning loop for Grand Theft Auto V that never reads game memory and never calls a mod API. It screenshots the window, learns which of nine keyboard actions you were holding, and later presses those same keys. When the picture stops changing, it assumes the car is stuck and tries to reverse out.
 
-You can run the piece that does not need the game in about a minute. The piece that drives needs Windows, your own copy of GTA V, and a dataset you record yourself. No weights ship here, and no drive has been retained.
-
-<a id="evidence-status"></a>
-
-## No driving result lives in this repository
-
-There is no published score, distance, success rate, or video. The tree has no model weights and no gameplay footage. Training captures are local `.npy` files and are not committed. Nothing in a filename, a comment, or a checkpoint that is not in this tree should be treated as a result, because no evaluation run is retained here.
-
-What you can verify today is the action encoding and that the Python sources parse. That is the demo below. It is not a driving benchmark.
+You can run the piece that does not need the game in about a minute. The piece that drives needs Windows, your own copy of GTA V, and a dataset you record yourself.
 
 ## Why try it
 
@@ -31,6 +23,7 @@ The code is legacy and rough. It is still a complete loop, and the contract that
 - [Getting started](#getting-started)
 - [Windows and GTA V](#windows-and-gta-v)
 - [Known rough edges](#known-rough-edges)
+- [Status](#evidence-status)
 - [Contributing](#contributing)
 - [License](#license)
 
@@ -175,6 +168,12 @@ Left as they are, on purpose. They are documented so the next person does not ha
 - **NameError on the stuck-car path.** `test_model.py` assigns `delta_count_last`, then appends `delta_count`, which is never defined. Recovery raises `NameError` until those names are reconciled. Product code is intentionally not changed here.
 - **Three-class leftovers.** [`src/training/create_training_data.py`](src/training/create_training_data.py) still captures an 800×600 region, converts to grayscale, resizes to 160×120, and emits a three-class `[A, W, D]` vector. [`src/training/balance_data.py`](src/training/balance_data.py) still balances left / forward / right. Neither matches the nine-class 480×270 pipeline.
 - **Imports the project file does not cover.** `train_model.py` imports `tqdm`, which is not listed in `pyproject.toml`. `otherception3` in `models.py` calls `tf.device` without importing TensorFlow.
+
+<a id="evidence-status"></a>
+
+## Status
+
+No model weights, gameplay footage, or evaluation results are committed. Training captures are local `.npy` files and stay out of the repository, so any driving result has to come from your own recorded dataset and training run. What you can check from this tree today is the action encoding and that the Python sources parse; that is [the demo you can run](#local-validation).
 
 ## Contributing
 

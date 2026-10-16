@@ -6,8 +6,6 @@ labels: ""
 assignees: ""
 ---
 
-> Tip-cite bank: base main `a9d447ac` + PR #N. Steward resolves; no `READY` claim.
-
 ## Summary
 
 <!-- Describe the documentation gap, question, or reproducibility issue. -->
@@ -21,8 +19,7 @@ assignees: ""
 ## Scope checklist
 
 - [ ] This issue is about documentation, reproducibility, or an evidence boundary.
-- [ ] I have not invented a score, benchmark result, driving-performance result, or `READY` status.
-- [ ] Any proposed fix will preserve an 8-character `main` tip plus PR-number tip-cite.
+- [ ] Any result I mention comes from a run I can point to (command, output, or link).
 
 ## Additional context
 

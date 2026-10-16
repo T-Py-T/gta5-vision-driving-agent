@@ -1,14 +1,8 @@
 # Support
 
-> Tip-cite: merge tip `a0992d5f` + PR #26. Steward resolves after merge; no `READY` claim.
+Use this page for questions, troubleshooting, and documentation fixes.
 
-This document describes support boundaries; it is not a performance report or a
-readiness certification. The retained repository evidence does not establish a
-benchmark score or driving-performance result. Do not infer a score, driving
-performance, or `READY` status from the source, setup instructions, tests, or
-demo path.
-
-## Support boundaries
+## How to get help
 
 - Questions and documentation fixes are welcome through GitHub issues and pull
   requests.
@@ -19,4 +13,5 @@ demo path.
   and driving evaluation are not supplied or certified by this repository.
 
 When reporting results, distinguish observed local behavior from claims about
-benchmark scores, driving performance, or readiness.
+benchmark scores or driving performance. Report security problems through
+[SECURITY.md](SECURITY.md).
