@@ -1,0 +1,28 @@
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: cef0300fd0fc4d2a87a85fa2093c6b283ea36f4b # v5.0.0
+    hooks:
+      - id: check-yaml
+      - id: check-toml
+
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: e8f7d69b957a30acb2c875078d5fd012de24b64c # v0.16.7
+    hooks:
+      - id: ruff-check
+        files: ^(tests/|src/policy\.py)$
+      - id: ruff-format
+        files: ^(tests/|src/policy\.py)$
+        stages: [manual]
+
+  - repo: https://github.com/gitleaks/gitleaks
+    rev: 9c72c5f9f05200fdc06e3f1b16e9aaa89fbe9f75 # v8.24.2
+    hooks:
+      - id: gitleaks
+
+  - repo: local
+    hooks:
+      - id: compileall-src
+        name: compileall src
+        entry: python3 -m compileall -q src
+        language: system
+        pass_filenames: false
